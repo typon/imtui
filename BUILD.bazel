@@ -1,0 +1,63 @@
+package(default_visibility = ["//visibility:public"])
+
+CXX_LANG_FLAGS = [
+  "-O3",
+  "-std=c++2a",
+  "-Wall",
+  "-Werror",
+  "-Wno-error=unused-variable",
+]
+
+CODEGEN_FLAGS = [
+  "-fPIC",
+]
+
+FINAL_CXXFLAGS = CXX_LANG_FLAGS + CODEGEN_FLAGS
+
+filegroup(
+    name = "imtui-headers",
+    srcs = glob(include=[
+      "include/imtui/*.h"
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+cpp_files = [
+  "src/imtui-impl-ncurses.cpp",
+  "src/imtui-impl-text.cpp",
+  ]
+
+LINK_FLAGS = []
+
+cc_library(
+    name = "imtui",
+    srcs = cpp_files,
+    hdrs = [":imtui-headers"],
+    copts = FINAL_CXXFLAGS,
+    linkopts = ["-lncurses"],
+    linkstatic = True,
+    visibility = ["//visibility:public"],
+    deps = ["//third-party:imgui"],
+    strip_include_prefix = "include",
+    includes = ["include"],
+)
+
+cc_library(
+    name = "imtui-demo",
+    srcs = ["examples/imtui-demo.cpp"],
+    hdrs = ["examples/imtui-demo.h", "examples/imtui-common.h"],
+    copts = FINAL_CXXFLAGS,
+    linkstatic = True,
+    visibility = ["//visibility:public"],
+    strip_include_prefix = "examples",
+    deps = [":imtui"],
+)
+
+
+cc_binary(
+    name = "ncurses-example0",
+    srcs = [
+      "examples/ncurses0/main.cpp",
+    ],
+    deps = [":imtui", ":imtui-demo"],
+)

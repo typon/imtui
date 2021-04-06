@@ -1,0 +1,44 @@
+package(default_visibility = ["//visibility:public"])
+
+CXX_LANG_FLAGS = [
+  "-O3",
+  "-std=c++2a",
+  "-Wall",
+  "-Werror",
+  "-Wno-error=unused-variable",
+]
+
+CODEGEN_FLAGS = [
+  "-fPIC",
+]
+
+FINAL_CXXFLAGS = CXX_LANG_FLAGS + CODEGEN_FLAGS
+
+filegroup(
+    name = "imgui-headers",
+    srcs = glob(include=[
+      "imgui/imgui/*.h"
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+cpp_files = [
+  "imgui/imgui/imgui.cpp",
+  "imgui/imgui/imgui_demo.cpp",
+  "imgui/imgui/imgui_draw.cpp",
+  "imgui/imgui/imgui_tables.cpp",
+  "imgui/imgui/imgui_widgets.cpp",
+]
+
+LINK_FLAGS = []
+
+cc_library(
+    name = "imgui",
+    srcs = cpp_files,
+    hdrs = [":imgui-headers"],
+    copts = FINAL_CXXFLAGS,
+    linkstatic = True,
+    visibility = ["//visibility:public"],
+    deps = [],
+    includes = ["imgui"]
+)

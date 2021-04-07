@@ -37,7 +37,7 @@ cc_library(
     linkopts = ["-lncurses"],
     linkstatic = True,
     visibility = ["//visibility:public"],
-    deps = ["//third-party:imgui"],
+    deps = ["//third-party:imgui", "@ncurses//:ncurses"],
     strip_include_prefix = "include",
     includes = ["include"],
 )
